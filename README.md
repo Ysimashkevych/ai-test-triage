@@ -11,21 +11,21 @@ Built as a portfolio project by Yurii Simashkevych (Senior/Lead SDET) to show ho
 ## Architecture
 
 ```mermaid
-flowchart LR
-  R[Playwright JSON report] --> P[Parser]
-  P -->|FailureRecord[]| H[Heuristic pre-classifier]
-  H -->|confidence >= threshold| OUT
-  H -->|ambiguous + hint| B[Prompt builder<br/>versioned prompt files]
-  B --> X[Redaction + truncation]
-  X --> L{{LLMClient interface}}
-  L --> A[AnthropicClient]
-  L --> M[MockLLM - tests]
-  A --> V[zod validation<br/>retry / timeout]
+flowchart TD
+  R["Playwright JSON report"] --> P["Parser"]
+  P -->|"FailureRecord[]"| H["Heuristic pre-classifier"]
+  H -->|"confidence ≥ threshold"| OUT
+  H -->|"ambiguous + hint"| B["Prompt builder<br/>versioned prompt files"]
+  B --> X["Redaction + truncation"]
+  X --> L{{"LLMClient interface"}}
+  L --> A["AnthropicClient"]
+  L --> M["MockLLM (tests)"]
+  A --> V["zod validation<br/>retry / timeout"]
   M --> V
-  V -->|valid verdict| OUT[TriageResult]
-  V -->|exhausted retries| F[Heuristic fallback / unclassified]
+  V -->|"valid verdict"| OUT["TriageResult"]
+  V -->|"exhausted retries"| F["Heuristic fallback / unclassified"]
   F --> OUT
-  OUT --> REP[Markdown + JSON report]
+  OUT --> REP["Markdown + JSON report"]
 ```
 
 | Module | Responsibility |

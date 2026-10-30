@@ -26,8 +26,13 @@ export class AnthropicClient implements LLMClient {
         },
         req.signal ? { signal: req.signal } : undefined,
       );
+      const stop = res.stop_reason as string | null;
+      // Re-sending the same prompt would hit the same wall, so neither is retryable.
+      if (stop === "refusal") throw new LlmError("Model refused to answer", false);
+      if (stop === "max_tokens") throw new LlmError(`Output hit max_tokens (${req.maxTokens}); raise --max-tokens`, false);
       return res.content.map((b) => (b.type === "text" ? b.text : "")).join("");
     } catch (e) {
+      if (e instanceof LlmError) throw e;
       if (e instanceof Anthropic.APIError && e.status !== undefined) {
         const retryable = e.status === 408 || e.status === 409 || e.status === 429 || e.status >= 500;
         throw new LlmError(`Anthropic API ${e.status}: ${e.message}`, retryable, e.status);

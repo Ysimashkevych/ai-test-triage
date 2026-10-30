@@ -74,7 +74,7 @@ export async function triageFailure(f: FailureRecord, o: TriageOptions = {}): Pr
     const { value, attempts } = await withRetry(
       () =>
         withTimeout(
-          (signal) => llm.complete({ system: prompt.system, user: prompt.user, maxTokens: o.maxTokens ?? 1024, signal }),
+          (signal) => llm.complete({ system: prompt.system, user: prompt.user, maxTokens: o.maxTokens ?? 4096, signal }),
           o.timeoutMs ?? 60_000,
         ).then(parseVerdict),
       {

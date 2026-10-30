@@ -15,8 +15,15 @@ export interface PromptLimits {
 }
 export const DEFAULT_LIMITS: PromptLimits = { errorChars: 4000, stackChars: 2500, logChars: 3000 };
 
+/**
+ * Untrusted text must not be able to close the <failure> block and pose as
+ * instructions, so any <failure / </failure tag in it is neutralised.
+ */
+export const neutraliseTags = (s: string): string => s.replace(/<(\/?)(failure)/gi, "&lt;$1$2");
+
 /** Redact first, then truncate, so a secret split by truncation can never survive. */
-const clean = (s: string, max: number) => truncateMiddle(redact(s), max) || "(none)";
+const clean = (s: string, max: number) => neutraliseTags(truncateMiddle(redact(s), max)) || "(none)";
+const short = (s: string) => neutraliseTags(redact(s));
 
 export function buildPrompt(
   f: FailureRecord,
@@ -27,11 +34,11 @@ export function buildPrompt(
   const tpl = loadPrompt(version);
   const attempts = f.attempts.map((a) => `#${a.retry}:${a.status}(${a.durationMs}ms)`).join(", ") || "n/a";
   const user = render(tpl.user, {
-    id: redact(f.id),
-    title: redact(f.title),
-    file: redact(f.file),
+    id: short(f.id),
+    title: short(f.title),
+    file: short(f.file),
     line: f.line !== undefined ? `:${f.line}` : "",
-    project: f.project,
+    project: short(f.project),
     outcome: f.outcome === "flaky" ? "flaky (failed, then passed on retry)" : "failed",
     attempts,
     trace: f.tracePath ? "yes (contents not sent)" : "no",

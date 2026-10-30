@@ -10,6 +10,7 @@ export const HELP = `Usage: ai-test-triage <playwright-report.json> [options]
   --max-failures <n>    Triage at most n failures
   --timeout-ms <n>      Per-call LLM timeout (default: 60000)
   --retries <n>         LLM retries (default: 2)
+  --max-tokens <n>      LLM output token limit (default: 4096)
 
 Env (with --llm): ANTHROPIC_API_KEY (required), ANTHROPIC_MODEL (default claude-sonnet-5-5)`;
 
@@ -28,6 +29,7 @@ export interface CliArgs {
   threshold: number;
   timeoutMs: number;
   retries: number;
+  maxTokens: number;
   maxFailures?: number;
 }
 
@@ -53,6 +55,7 @@ export function parseCliArgs(argv: string[]): CliArgs | null {
         "max-failures": { type: "string" },
         "timeout-ms": { type: "string", default: "60000" },
         retries: { type: "string", default: "2" },
+        "max-tokens": { type: "string", default: "4096" },
         help: { type: "boolean", short: "h", default: false },
       },
     });
@@ -71,6 +74,7 @@ export function parseCliArgs(argv: string[]): CliArgs | null {
     threshold: num("threshold", v.threshold, (n) => n >= 0 && n <= 1, "a number between 0 and 1"),
     timeoutMs: num("timeout-ms", v["timeout-ms"], intAtLeast(1), "a positive integer"),
     retries: num("retries", v.retries, intAtLeast(0), "a non-negative integer"),
+    maxTokens: num("max-tokens", v["max-tokens"], intAtLeast(1), "a positive integer"),
     ...(v["max-failures"] !== undefined
       ? { maxFailures: num("max-failures", v["max-failures"], intAtLeast(1), "a positive integer") }
       : {}),

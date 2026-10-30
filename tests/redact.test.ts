@@ -13,6 +13,9 @@ describe("redact", () => {
     ["url credentials", "postgres://admin:hunter2@db.internal:5432/app", "hunter2"],
     ["cookie header", "Set-Cookie: sid=abcdef123456; HttpOnly", "abcdef123456"],
     ["email", "user jane.doe@corp.example.com failed", "jane.doe@corp.example.com"],
+    ["openai project key", "OPENAI sk-proj-abcDEF123_ghiJKL456-mnoPQR789", "sk-proj-abcDEF"],
+    ["github fine-grained pat", "github_pat_11ABCDEFG0123456789_abcdefghijklmnop", "github_pat_11ABC"],
+    ["digest authorization", 'Authorization: Digest username="u", response="6629fae49393a05397450978507c4ef1"', "6629fae4939"],
     ["private key", "-----BEGIN RSA PRIVATE KEY-----\nMIIB\n-----END RSA PRIVATE KEY-----", "MIIB"],
   ];
   it.each(cases)("redacts %s", (_n, input, secret) => {

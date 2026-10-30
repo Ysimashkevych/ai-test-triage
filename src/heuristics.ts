@@ -21,7 +21,7 @@ const RULES: Rule[] = [
   },
   {
     name: "browser-launch",
-    test: (_f, t) => /browserType\.launch|Executable doesn't exist|Target (page, context or browser )?has been closed|browser has disconnected|Failed to launch|ENOSPC|out of memory/i.test(t),
+    test: (_f, t) => /browserType\.launch|Executable doesn't exist|browser has disconnected|Failed to launch|ENOSPC|out of memory/i.test(t),
     verdict: {
       category: "environment",
       confidence: 0.85,

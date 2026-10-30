@@ -37,7 +37,7 @@ export async function withRetry<T>(fn: (attempt: number) => Promise<T>, o: Retry
       return { value: await fn(attempt), attempts: attempt + 1 };
     } catch (e) {
       if (attempt >= o.retries || !o.isRetryable(e)) {
-        (e as { attempts?: number }).attempts = attempt + 1;
+        if (e && typeof e === "object") (e as { attempts?: number }).attempts = attempt + 1;
         throw e;
       }
       await sleep(o.baseDelayMs * 2 ** attempt);

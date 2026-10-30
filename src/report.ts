@@ -4,7 +4,6 @@ export interface ReportMeta {
   generatedAt: string;
   model: string;
   promptVersion: string;
-  totalTestsInReport?: number;
 }
 
 export interface TriageReport {
@@ -24,6 +23,8 @@ export function buildReport(results: TriageResult[], meta: ReportMeta): TriageRe
 }
 
 const esc = (s: string) => s.replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+/** Model and log text is untrusted: stop it from injecting links, images or HTML into the report. */
+const inline = (s: string) => esc(s).replace(/[[\]<>`]/g, (c) => `\\${c}`);
 
 export function toMarkdown(r: TriageReport): string {
   const L: string[] = [];
@@ -41,12 +42,12 @@ export function toMarkdown(r: TriageReport): string {
     L.push(`- **File:** \`${x.file}\``);
     L.push(`- **Test id:** \`${x.failureId}\``);
     L.push(`- **Category:** ${x.category} (confidence ${x.confidence.toFixed(2)}, source: ${x.source})`);
-    L.push(`- **Root-cause hypothesis:** ${x.rootCauseHypothesis}`);
-    L.push(`- **Suggested next step:** ${x.suggestedNextStep}`);
+    L.push(`- **Root-cause hypothesis:** ${inline(x.rootCauseHypothesis)}`);
+    L.push(`- **Suggested next step:** ${inline(x.suggestedNextStep)}`);
     if (x.heuristic) L.push(`- **Heuristic baseline:** ${x.heuristic.category} (${x.heuristic.confidence}, rule \`${x.heuristic.rule}\`)`);
     if (x.tracePath) L.push(`- **Trace:** \`${x.tracePath}\``);
     if (x.screenshotPath) L.push(`- **Screenshot:** \`${x.screenshotPath}\``);
-    if (x.error) L.push(`- **Note:** ${x.error}`);
+    if (x.error) L.push(`- **Note:** ${inline(x.error)}`);
   }
   return L.join("\n") + "\n";
 }

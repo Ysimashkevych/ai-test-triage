@@ -57,7 +57,7 @@ node --env-file=.env --import tsx src/cli.ts path/to/results.json --llm --out-di
 
 Produce the input with `npx playwright test --reporter=json > results.json` (or `PLAYWRIGHT_JSON_OUTPUT_NAME=results.json` with `--reporter=json`).
 
-Options: `--llm`, `--out-dir`, `--prompt-version`, `--threshold`, `--max-failures`, `--timeout-ms`, `--retries`. Model: `ANTHROPIC_MODEL` (default `claude-sonnet-5-5`).
+Options: `--llm`, `--out-dir`, `--prompt-version`, `--threshold`, `--max-failures`, `--timeout-ms`, `--retries`, `--max-tokens`. Model: `ANTHROPIC_MODEL` (default `claude-sonnet-5-5`).
 
 Library use:
 
@@ -80,7 +80,7 @@ Honest caveat: for LLM-routed fixture cases the MockLLM replays canned answers. 
 
 ## Privacy and redaction
 
-Test logs often contain tokens and personal data. Before anything is placed in a prompt, every text field (title, error, stack, stdout, stderr) is ANSI-stripped, **redacted**, and only then truncated. Redacted patterns: Authorization/Cookie headers, Bearer tokens, JWTs, Anthropic/OpenAI-style keys, AWS access keys, GitHub and Slack tokens, private-key blocks, credentials in URLs, `password`/`secret`/`token`/`api_key`-style key-value pairs and email addresses. Screenshots and traces are **never** uploaded; only their paths are mentioned.
+Test logs often contain tokens and personal data. Before anything is placed in a prompt, every text field is **redacted**; error, stack, stdout and stderr are also ANSI-stripped and then truncated, and any `<failure>` tag in the text is neutralised so log content cannot close the data block. Redacted patterns: Authorization/Cookie headers, Bearer tokens, JWTs, Anthropic and OpenAI keys (including `sk-proj-`), AWS access keys, GitHub tokens (`ghp_`-style and `github_pat_`), Slack tokens, private-key blocks, credentials in URLs, `password`/`secret`/`token`/`api_key`-style key-value pairs and email addresses. Screenshots and traces are **never** uploaded; only their paths are mentioned.
 
 Limits: redaction is pattern based. It will miss secrets with no recognisable shape or key name, and it can over-redact. Review what you send, and leave `--llm` off for sensitive suites. The LLM is opt-in, so an `ANTHROPIC_API_KEY` that happens to be set in your shell is never used unless you pass `--llm`. Numeric options are validated, and bad values exit with code 2. Log content is also treated as untrusted (prompt-injection): the system prompt tells the model to ignore instructions in it, and output is schema-validated, but that is mitigation, not a guarantee.
 
@@ -109,10 +109,6 @@ New prompt versions: add `src/prompts/v2/{system,user}.md` and run with `--promp
 - Heuristics are regexes over English Playwright messages; custom reporters or localized messages may bypass them. A confident heuristic (e.g. `net::ERR_*`) can be wrong, for example when a product misconfiguration causes the refusal.
 - Only the JSON reporter format is supported; failures are processed sequentially; no cross-run flakiness history is used (the strongest flakiness signal).
 - Not verified against live API output in this repo (developed without an API key). The `AnthropicClient` is a thin wrapper, but real-model behaviour, cost and latency are untested here.
-
-## License
-
-MIT
 
 ## Related projects
 

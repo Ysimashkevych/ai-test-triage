@@ -21,7 +21,7 @@
                     "message": "\u001b[31mError: \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: \"Total: $64.78\"\nReceived: \"Total: $59.98\"\nCall log:\n  - expect.toHaveText with timeout 5000ms",
                     "stack": "Error: expect(locator).toHaveText(expected)\n    at /repo/e2e/checkout.spec.ts:19:42"
                   },
-                  "stdout": [{ "text": "[console.log] cart items=2 subtotal=59.98 taxRate=0\n" }, { "text": "[console.warn] /api/tax returned {\"rate\":0,\"region\":\"US-CA\"}\n" }],
+                  "stdout": [{ "text": "[console.log] cart items=2 subtotal=59.98 taxRate=0 user=qa.user@corp.example.test password=Sup3rS3cret!\n" }, { "text": "[console.warn] /api/tax returned {\"rate\":0,\"region\":\"US-CA\"}\n" }],
                   "stderr": [],
                   "attachments": [
                     { "name": "screenshot", "contentType": "image/png", "path": "test-results/checkout-tax/test-failed-1.png" },

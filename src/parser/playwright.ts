@@ -41,6 +41,13 @@ export function parseReport(json: unknown): FailureRecord[] {
     for (const child of suite.suites ?? []) walk(child, here);
   };
   for (const s of (json as PwReport).suites ?? []) walk(s, []);
+  // Parameterised tests share file, line and project; suffix repeats so ids stay unique.
+  const seen = new Map<string, number>();
+  for (const r of out) {
+    const n = (seen.get(r.id) ?? 0) + 1;
+    seen.set(r.id, n);
+    if (n > 1) r.id = `${r.id} #${n}`;
+  }
   return out;
 }
 
@@ -70,7 +77,7 @@ function toFailure(spec: PwSpec, test: PwTest, file: string, path: string[]): Fa
     .filter((a) => a.path)
     .map((a) => ({ name: a.name ?? "attachment", path: a.path as string, ...(a.contentType ? { contentType: a.contentType } : {}) }));
   const trace = attachments.find((a) => a.name === "trace" || a.path.endsWith("trace.zip"));
-  const shot = attachments.find((a) => a.name === "screenshot" || a.contentType === "image/png");
+  const shot = attachments.find((a) => a.name === "screenshot");
 
   const rec: FailureRecord = {
     id: `${spec.file ?? file}:${line ?? 0} [${project}]`,

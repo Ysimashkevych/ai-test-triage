@@ -9,7 +9,7 @@ export class AnthropicClient implements LLMClient {
 
   constructor(opts: { apiKey?: string; model?: string } = {}) {
     const apiKey = opts.apiKey ?? process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) throw new Error("ANTHROPIC_API_KEY is not set (use --no-llm for heuristics only)");
+    if (!apiKey) throw new Error("ANTHROPIC_API_KEY is not set (omit --llm for heuristics only)");
     // SDK-level retries disabled: retry/timeout policy lives in one place (src/retry.ts)
     this.client = new Anthropic({ apiKey, maxRetries: 0 });
     this.name = opts.model ?? process.env.ANTHROPIC_MODEL ?? DEFAULT_MODEL;

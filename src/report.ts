@@ -38,7 +38,8 @@ export function toMarkdown(r: TriageReport): string {
   for (const x of r.results) L.push(`| ${esc(x.title)} | ${x.category} | ${x.confidence.toFixed(2)} | ${x.source} |`);
   for (const x of r.results) {
     L.push("", `### ${x.title}`, "");
-    L.push(`- **File:** \`${x.failureId}\``);
+    L.push(`- **File:** \`${x.file}\``);
+    L.push(`- **Test id:** \`${x.failureId}\``);
     L.push(`- **Category:** ${x.category} (confidence ${x.confidence.toFixed(2)}, source: ${x.source})`);
     L.push(`- **Root-cause hypothesis:** ${x.rootCauseHypothesis}`);
     L.push(`- **Suggested next step:** ${x.suggestedNextStep}`);

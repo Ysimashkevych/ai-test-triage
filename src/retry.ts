@@ -30,6 +30,7 @@ export interface RetryOptions {
 }
 
 export async function withRetry<T>(fn: (attempt: number) => Promise<T>, o: RetryOptions): Promise<{ value: T; attempts: number }> {
+  if (!Number.isInteger(o.retries) || o.retries < 0) throw new RangeError(`retries must be a non-negative integer, got ${o.retries}`);
   const sleep = o.sleep ?? ((ms) => new Promise<void>((r) => setTimeout(r, ms)));
   for (let attempt = 0; ; attempt++) {
     try {

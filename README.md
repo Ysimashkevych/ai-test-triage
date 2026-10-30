@@ -48,16 +48,16 @@ Retry policy: timeouts, HTTP 408/409/429/5xx, connection errors and schema-inval
 npm install
 cp .env.example .env     # add ANTHROPIC_API_KEY; never commit it
 
-# try it without any key
-npx tsx src/cli.ts fixtures/checkout-report.json --no-llm
+# heuristics only (the default): no key, no network calls
+npx tsx src/cli.ts fixtures/checkout-report.json
 
-# with the LLM
-node --env-file=.env --import tsx src/cli.ts path/to/results.json --out-dir triage-out
+# opt in to the LLM for failures the heuristics are unsure of
+node --env-file=.env --import tsx src/cli.ts path/to/results.json --llm --out-dir triage-out
 ```
 
 Produce the input with `npx playwright test --reporter=json > results.json` (or `PLAYWRIGHT_JSON_OUTPUT_NAME=results.json` with `--reporter=json`).
 
-Options: `--no-llm`, `--out-dir`, `--prompt-version`, `--threshold`, `--max-failures`, `--timeout-ms`, `--retries`. Model: `ANTHROPIC_MODEL` (default `claude-sonnet-5-5`).
+Options: `--llm`, `--out-dir`, `--prompt-version`, `--threshold`, `--max-failures`, `--timeout-ms`, `--retries`. Model: `ANTHROPIC_MODEL` (default `claude-sonnet-5-5`).
 
 Library use:
 
@@ -82,7 +82,7 @@ Honest caveat: for LLM-routed fixture cases the MockLLM replays canned answers. 
 
 Test logs often contain tokens and personal data. Before anything is placed in a prompt, every text field (title, error, stack, stdout, stderr) is ANSI-stripped, **redacted**, and only then truncated. Redacted patterns: Authorization/Cookie headers, Bearer tokens, JWTs, Anthropic/OpenAI-style keys, AWS access keys, GitHub and Slack tokens, private-key blocks, credentials in URLs, `password`/`secret`/`token`/`api_key`-style key-value pairs and email addresses. Screenshots and traces are **never** uploaded; only their paths are mentioned.
 
-Limits: redaction is pattern based. It will miss secrets with no recognisable shape or key name, and it can over-redact. Review what you send, and use `--no-llm` for sensitive suites. Log content is also treated as untrusted (prompt-injection): the system prompt tells the model to ignore instructions in it, and output is schema-validated, but that is mitigation, not a guarantee.
+Limits: redaction is pattern based. It will miss secrets with no recognisable shape or key name, and it can over-redact. Review what you send, and leave `--llm` off for sensitive suites. The LLM is opt-in, so an `ANTHROPIC_API_KEY` that happens to be set in your shell is never used unless you pass `--llm`. Numeric options are validated, and bad values exit with code 2. Log content is also treated as untrusted (prompt-injection): the system prompt tells the model to ignore instructions in it, and output is schema-validated, but that is mitigation, not a guarantee.
 
 ## Adding a provider
 
@@ -113,3 +113,13 @@ New prompt versions: add `src/prompts/v2/{system,user}.md` and run with `--promp
 ## License
 
 MIT
+
+## Related projects
+
+- [qa-claude-skills](https://github.com/Ysimashkevych/qa-claude-skills): the `flaky-test-triage` skill uses the same four categories (`product-bug`, `test-bug`, `environment`, `flaky-test`) for interactive triage.
+- [playwright-ts-framework](https://github.com/Ysimashkevych/playwright-ts-framework): a Playwright suite whose JSON report this tool can read.
+- [graphql-api-tests-go](https://github.com/Ysimashkevych/graphql-api-tests-go): GraphQL API testing in Go.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

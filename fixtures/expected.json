@@ -1,0 +1,25 @@
+{
+  "checkout-report.json": {
+    "checkout.spec.ts:14 [chromium]": {
+      "category": "product-bug", "source": "llm",
+      "mockResponse": { "category": "product-bug", "confidence": 0.82, "rootCauseHypothesis": "/api/tax returned rate 0 for US-CA, so the total equals the subtotal; the tax service/config looks broken.", "suggestedNextStep": "Check the tax-rate lookup for US-CA and add an API-level test for /api/tax." }
+    },
+    "checkout.spec.ts:41 [chromium]": { "category": "environment", "source": "heuristic" },
+    "checkout.spec.ts:58 [chromium]": { "category": "test-bug", "source": "heuristic" },
+    "checkout.spec.ts:75 [chromium]": {
+      "category": "flaky-test", "source": "llm",
+      "mockResponse": "```json\n{\"category\":\"flaky-test\",\"confidence\":0.7,\"rootCauseHypothesis\":\"Confirmation text appeared only after retry; likely a slow order-submit call racing the wait.\",\"suggestedNextStep\":\"Wait on the order API response instead of the text and run with --repeat-each=20.\"}\n```"
+    }
+  },
+  "auth-report.json": {
+    "auth.spec.ts:9 [firefox]": {
+      "category": "product-bug", "source": "llm",
+      "mockResponse": { "category": "product-bug", "confidence": 0.9, "rootCauseHypothesis": "Login endpoint returned 500 with a NullReferenceException in SessionService.CreateSession.", "suggestedNextStep": "File a backend defect with the request id; the test is valid." }
+    },
+    "auth.spec.ts:33 [firefox]": {
+      "category": "test-bug", "source": "llm",
+      "mockResponse": { "category": "test-bug", "confidence": 0.8, "rootCauseHypothesis": "The id selector was removed in release 4.12; the element now exposes data-testid=user-menu.", "suggestedNextStep": "Switch the locator to getByTestId('user-menu')." }
+    },
+    "auth.spec.ts:70 [webkit]": { "category": "environment", "source": "heuristic" }
+  }
+}

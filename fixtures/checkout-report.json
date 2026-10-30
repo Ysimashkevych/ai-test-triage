@@ -1,0 +1,82 @@
+{
+  "config": { "rootDir": "/repo/e2e" },
+  "suites": [
+    {
+      "title": "checkout.spec.ts",
+      "file": "checkout.spec.ts",
+      "specs": [],
+      "suites": [
+        {
+          "title": "Checkout",
+          "file": "checkout.spec.ts",
+          "specs": [
+            {
+              "title": "applies 8% tax to cart total",
+              "ok": false, "file": "checkout.spec.ts", "line": 14, "column": 7,
+              "tests": [{
+                "projectName": "chromium", "expectedStatus": "passed", "status": "unexpected",
+                "results": [{
+                  "workerIndex": 0, "status": "failed", "duration": 2310, "retry": 0,
+                  "error": {
+                    "message": "\u001b[31mError: \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: \"Total: $64.78\"\nReceived: \"Total: $59.98\"\nCall log:\n  - expect.toHaveText with timeout 5000ms",
+                    "stack": "Error: expect(locator).toHaveText(expected)\n    at /repo/e2e/checkout.spec.ts:19:42"
+                  },
+                  "stdout": [{ "text": "[console.log] cart items=2 subtotal=59.98 taxRate=0\n" }, { "text": "[console.warn] /api/tax returned {\"rate\":0,\"region\":\"US-CA\"}\n" }],
+                  "stderr": [],
+                  "attachments": [
+                    { "name": "screenshot", "contentType": "image/png", "path": "test-results/checkout-tax/test-failed-1.png" },
+                    { "name": "trace", "contentType": "application/zip", "path": "test-results/checkout-tax/trace.zip" }
+                  ]
+                }]
+              }]
+            },
+            {
+              "title": "pays with saved card",
+              "ok": false, "file": "checkout.spec.ts", "line": 41, "column": 7,
+              "tests": [{
+                "projectName": "chromium", "expectedStatus": "passed", "status": "unexpected",
+                "results": [{
+                  "workerIndex": 1, "status": "failed", "duration": 780, "retry": 0,
+                  "error": { "message": "page.goto: net::ERR_CONNECTION_REFUSED at https://staging.shop.example.test/checkout\nCall log:\n  - navigating to \"https://staging.shop.example.test/checkout\", waiting until \"load\"", "stack": "Error: page.goto: net::ERR_CONNECTION_REFUSED\n    at /repo/e2e/checkout.spec.ts:42:16" },
+                  "stdout": [], "stderr": [], "attachments": []
+                }]
+              }]
+            },
+            {
+              "title": "removes an item from the cart",
+              "ok": false, "file": "checkout.spec.ts", "line": 58, "column": 7,
+              "tests": [{
+                "projectName": "chromium", "expectedStatus": "passed", "status": "unexpected",
+                "results": [{
+                  "workerIndex": 0, "status": "failed", "duration": 1500, "retry": 0,
+                  "error": { "message": "Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Remove' }) resolved to 2 elements:\n    1) <button class=\"remove\">Remove</button> aka getByTestId('remove-sku-1')\n    2) <button class=\"remove\">Remove</button> aka getByTestId('remove-sku-2')", "stack": "at /repo/e2e/checkout.spec.ts:60:51" },
+                  "stdout": [], "stderr": [], "attachments": []
+                }]
+              }]
+            },
+            {
+              "title": "shows order confirmation",
+              "ok": true, "file": "checkout.spec.ts", "line": 75, "column": 7,
+              "tests": [{
+                "projectName": "chromium", "expectedStatus": "passed", "status": "flaky",
+                "results": [
+                  { "workerIndex": 0, "status": "failed", "duration": 30000, "retry": 0,
+                    "error": { "message": "Test timeout of 30000ms exceeded.\nError: locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByText('Order confirmed') to be visible", "stack": "at /repo/e2e/checkout.spec.ts:80:55" },
+                    "stdout": [], "stderr": [], "attachments": [] },
+                  { "workerIndex": 0, "status": "passed", "duration": 4100, "retry": 1, "stdout": [], "stderr": [], "attachments": [] }
+                ]
+              }]
+            },
+            {
+              "title": "renders empty cart state",
+              "ok": true, "file": "checkout.spec.ts", "line": 90, "column": 7,
+              "tests": [{ "projectName": "chromium", "expectedStatus": "passed", "status": "expected",
+                "results": [{ "status": "passed", "duration": 900, "retry": 0, "stdout": [], "stderr": [], "attachments": [] }] }]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

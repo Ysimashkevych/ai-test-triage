@@ -1,0 +1,61 @@
+{
+  "config": {},
+  "suites": [
+    {
+      "title": "auth.spec.ts",
+      "file": "auth.spec.ts",
+      "specs": [
+        {
+          "title": "logs in with valid credentials",
+          "ok": false, "file": "auth.spec.ts", "line": 9, "column": 5,
+          "tests": [{
+            "projectName": "firefox", "expectedStatus": "passed", "status": "unexpected",
+            "results": [{
+              "status": "failed", "duration": 1900, "retry": 0,
+              "error": { "message": "Error: expect(page).toHaveURL(expected)\n\nExpected pattern: /dashboard/\nReceived string:  \"https://app.example.test/login?error=server\"", "stack": "at /repo/e2e/auth.spec.ts:15:24" },
+              "stdout": [
+                { "text": "[request] POST /api/login Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMifQ.c2lnbmF0dXJlLXZhbHVl\n" },
+                { "text": "[request] body {\"email\":\"qa.user@corp.example.test\",\"password\":\"Sup3rS3cret!\"}\n" },
+                { "text": "[response] 500 Internal Server Error {\"error\":\"NullReferenceException in SessionService.CreateSession\"}\n" },
+                { "text": "[env] API_KEY=sk-ant-api03-AAAAAAAAAAAAAAAAAAAAAAAA\n" }
+              ],
+              "stderr": [],
+              "attachments": [{ "name": "trace", "contentType": "application/zip", "path": "test-results/auth-login/trace.zip" }]
+            }]
+          }]
+        },
+        {
+          "title": "shows profile menu",
+          "ok": false, "file": "auth.spec.ts", "line": 33, "column": 5,
+          "tests": [{
+            "projectName": "firefox", "expectedStatus": "passed", "status": "unexpected",
+            "results": [{
+              "status": "failed", "duration": 5200, "retry": 0,
+              "error": { "message": "Error: expect(locator).toBeVisible()\n\nLocator: locator('#user-menu-btn')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n  - waiting for locator('#user-menu-btn')\n  - Timeout 5000ms exceeded", "stack": "at /repo/e2e/auth.spec.ts:36:41" },
+              "stdout": [{ "text": "[dom] found [data-testid=user-menu] (id attribute removed in release 4.12)\n" }],
+              "stderr": [], "attachments": [{ "name": "screenshot", "contentType": "image/png", "path": "test-results/auth-menu/test-failed-1.png" }]
+            }]
+          }]
+        }
+      ],
+      "suites": [
+        {
+          "title": "CI runner",
+          "file": "auth.spec.ts",
+          "specs": [{
+            "title": "launches browser",
+            "ok": false, "file": "auth.spec.ts", "line": 70, "column": 5,
+            "tests": [{
+              "projectName": "webkit", "expectedStatus": "passed", "status": "unexpected",
+              "results": [{
+                "status": "failed", "duration": 120, "retry": 0,
+                "error": { "message": "browserType.launch: Executable doesn't exist at /home/runner/.cache/ms-playwright/webkit-2070/pw_run.sh\nLooks like Playwright was just installed or updated. Please run: npx playwright install" },
+                "stdout": [], "stderr": [], "attachments": []
+              }]
+            }]
+          }]
+        }
+      ]
+    }
+  ]
+}
